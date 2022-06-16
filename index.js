@@ -14,7 +14,7 @@ document.querySelectorAll('div.clickElement').forEach(item => {
       updateDisplay();
     }
     else if (itemClicked === "="){
-      compute();
+      preCompute();
     }
     else{
       displayArray.push(itemClicked)
@@ -31,20 +31,37 @@ function deleteLastItem (){
   displayArray.pop()
 }
 
-function compute(){
-  output = displayArray[0];
+function preCompute(){
+  computeArray = []
+  tempValue = ""
   for (var i = 0; i < displayArray.length; i++){
-    if (displayArray[i] === "×"){
-      output = output * displayArray[i+1]
+    if (!isNaN(Number(displayArray[i])) || displayArray[i] === "."){
+      tempValue = tempValue + displayArray[i]
     }
-    if (displayArray[i] === "+"){
-      output = Number(output) + Number(displayArray[i+1])
+    else {
+      computeArray.push(Number(tempValue))
+      tempValue = ""
+      computeArray.push(displayArray[i])
     }
-    if (displayArray[i] === "-"){
-      output = output - displayArray[i+1]
+  }
+  computeArray.push(Number(tempValue))
+  compute();
+}
+
+function compute(){
+  output = computeArray[0];
+  for (var i = 0; i < computeArray.length; i++){
+    if (computeArray[i] === "×"){
+      output = output * computeArray[i+1]
     }
-    if (displayArray[i] === "÷"){
-      output = output / displayArray[i+1]
+    if (computeArray[i] === "+"){
+      output = Number(output) + Number(computeArray[i+1])
+    }
+    if (computeArray[i] === "-"){
+      output = output - computeArray[i+1]
+    }
+    if (computeArray[i] === "÷"){
+      output = output / computeArray[i+1]
     }
   }
   output = Math.round(output * 100) / 100;
